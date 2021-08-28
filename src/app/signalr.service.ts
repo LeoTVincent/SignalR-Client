@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import * as SignalR from '@aspnet/signalr';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SignalrService {
-
-  constructor() { }
+public connectionID:string='';
+  constructor(private http: HttpClient) { }
 
   hubConnection:SignalR.HubConnection | undefined;
   startConnection = () =>{
@@ -24,7 +25,15 @@ export class SignalrService {
     })
     .catch(err => console.log('Error while starting connection: '+ err))
   }
+  startHttpConnection(){
+    console.log(this.connectionID);
+    return this.http.get('https://localhost:5001/api/StatusCheck',{params: {id:this.connectionID}})
+    .subscribe(res =>{
+      console.log(res);
+    });
+  }
 
+  
   askServer(){
     console.log('start of askServer method');
     this.hubConnection?.invoke('askServer','hey')
@@ -34,8 +43,8 @@ export class SignalrService {
 
   askServerListener(){
     console.log('start of askServerListener method');
-    this.hubConnection?.on('askServerResponse',(someText) =>{
-      console.log(someText);
+    this.hubConnection?.on('askServerResponse',(connectionID) =>{
+      this.connectionID=connectionID;
     })
     console.log('end of askServerListener method');
   }
