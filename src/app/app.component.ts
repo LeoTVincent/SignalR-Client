@@ -24,11 +24,12 @@ export class AppComponent implements OnInit, OnDestroy {
 
     setTimeout(() =>{
       this.signalrService.startHttpConnection();
-    },15000)
+    },10000)
   }
   addTransferDataListener(){
     this.signalrService.hubConnection?.on('transferData',(data)=>{
       console.log(data);
+      this.msgFromSignalR = data;
     })
   }
   ngOnDestroy(): void {

@@ -32,11 +32,9 @@ public connectionID:string='';
       console.log(res);
     });
   }
-
-  
   askServer(){
     console.log('start of askServer method');
-    this.hubConnection?.invoke('askServer','hey')
+    this.hubConnection?.invoke('askServer')
     .catch(err => console.error(err));
     console.log('end of askServer method');
   }
